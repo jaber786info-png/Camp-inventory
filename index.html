@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camp Stock Inventory</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2196F3">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>Camp Stock Inventory</h1>
+            <button id="exportBtn" class="export-btn">📥 Export CSV</button>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="entry">New Entry</button>
+            <button class="tab-btn" data-tab="list">Entries</button>
+            <button class="tab-btn" data-tab="sync">Sync Status</button>
+        </nav>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- New Entry Tab -->
+            <div id="entry-tab" class="tab-pane active">
+                <form id="entryForm" class="entry-form">
+                    <div class="form-group">
+                        <label for="camp">Camp *</label>
+                        <input type="text" id="camp" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="entryBy">Entry By *</label>
+                        <input type="text" id="entryBy" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="entryDate">Entry Date *</label>
+                        <input type="date" id="entryDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inventoryType">Inventory Type *</label>
+                        <select id="inventoryType" required>
+                            <option value="Purchase">Purchase</option>
+                            <option value="Transfer">Transfer</option>
+                            <option value="Return">Return</option>
+                            <option value="Adjustment">Adjustment</option>
+                        </select>
+                    </div>
+
+                    <div id="conditionalFields"></div>
+
+                    <div class="items-section">
+                        <div class="items-header">
+                            <h3>Items</h3>
+                            <button type="button" id="addItemBtn" class="btn btn-secondary">+ Add Item</button>
+                        </div>
+                        <div id="itemsList"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save Entry</button>
+                </form>
+            </div>
+
+            <!-- Entries List Tab -->
+            <div id="list-tab" class="tab-pane">
+                <div class="search-filter">
+                    <input type="text" id="searchInput" placeholder="Search entries...">
+                    <select id="filterType">
+                        <option value="">All Types</option>
+                        <option value="Purchase">Purchase</option>
+                        <option value="Transfer">Transfer</option>
+                        <option value="Return">Return</option>
+                        <option value="Adjustment">Adjustment</option>
+                    </select>
+                </div>
+                <div id="entriesList" class="entries-list"></div>
+            </div>
+
+            <!-- Sync Status Tab -->
+            <div id="sync-tab" class="tab-pane">
+                <div class="sync-status">
+                    <div class="status-card">
+                        <div class="status-icon">☁️</div>
+                        <h3 id="connectivityStatus">Checking...</h3>
+                    </div>
+
+                    <div class="stats-card">
+                        <h3>Statistics</h3>
+                        <div class="stat-row">
+                            <span>📦 Total Entries</span>
+                            <strong id="totalEntries">0</strong>
+                        </div>
+                        <div class="stat-row">
+                            <span>✅ Synced</span>
+                            <strong id="syncedEntries" class="text-success">0</strong>
+                        </div>
+                        <div class="stat-row">
+                            <span>⏳ Pending Sync</span>
+                            <strong id="unsyncedEntries" class="text-warning">0</strong>
+                        </div>
+                    </div>
+
+                    <button id="syncBtn" class="btn btn-primary">🔄 Sync Now</button>
+
+                    <div class="info-card">
+                        <h4>Auto Sync</h4>
+                        <p>The app automatically syncs pending entries when internet connection is available.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast"></div>
+
+        <!-- Entry Detail Modal -->
+        <div id="detailModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="detailContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+    <script src="sync.js"></script>
+    <script>
+        // Register Service Worker for offline support
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(() => {
+                console.log('Service Worker Registered');
+            });
+        }
+    </script>
+</body>
+</html>
